@@ -1,0 +1,94 @@
+/* clp_tfp · survival · CUSTOM HUD (SVG-Ringe, clean) */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+    width: 100%; height: 100%; overflow: hidden; background: transparent;
+    font-family: 'Rajdhani', 'Inter', 'Segoe UI', sans-serif;
+    -webkit-font-smoothing: antialiased; user-select: none;
+}
+
+/* ─── HUD-Container (unten Mitte) ──────────────────────────────────────────── */
+#survival-hud {
+    position: fixed; left: 50%; bottom: 2.0vh; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px; z-index: 20;
+}
+
+/* ─── Ring-Gauges ──────────────────────────────────────────────────────────── */
+#tfp-gauges {
+    display: flex; flex-direction: row; gap: 4px;
+    padding: 7px 12px; border-radius: 18px;
+    background: rgba(10, 14, 18, 0.55);
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.45);
+}
+.g { position: relative; width: 46px; height: 46px; }
+.g svg { width: 46px; height: 46px; transform: rotate(-90deg); display: block; }
+.g .trk { fill: none; stroke: rgba(255, 255, 255, 0.10); stroke-width: 3.2; }
+.g .prg { fill: none; stroke-width: 3.2; stroke-linecap: round; transition: stroke-dashoffset 0.45s ease, stroke 0.3s; }
+.g .ic  { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+          font-size: 15px; line-height: 1; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.7)); }
+.g .v   { position: absolute; left: 0; right: 0; bottom: -3px; text-align: center;
+          font-size: 10px; font-weight: 700; color: #dfe7ee; text-shadow: 0 1px 2px rgba(0,0,0,0.9); }
+.g.low .prg { animation: tfp-lowpulse 1.3s ease-in-out infinite; }
+.g.low .v { color: #ff6b5e; }
+@keyframes tfp-lowpulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+/* ─── Zustands-Badges (über den Gauges) ────────────────────────────────────── */
+#tfp-conditions { display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 6px; max-width: 60vw; }
+.badge {
+    display: flex; align-items: center; gap: 6px;
+    padding: 4px 10px 4px 8px; border-radius: 11px;
+    background: rgba(12, 16, 20, 0.86); color: #f1f4f8;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.2px; white-space: nowrap;
+    border-left: 3px solid #888; box-shadow: 0 2px 9px rgba(0, 0, 0, 0.45);
+}
+.badge .bic { font-size: 13px; line-height: 1; }
+.badge.wet   { border-left-color: #2D9CDB; }
+.badge.sick  { border-left-color: #9B59B6; }
+.badge.bleed { border-left-color: #E74C3C; }
+.badge.frac  { border-left-color: #E67E22; }
+.badge.air   { border-left-color: #38BDF8; }
+.badge.tired { border-left-color: #9B8B5A; }
+.badge.pulse { animation: tfp-badgepulse 1.1s ease-in-out infinite; }
+@keyframes tfp-badgepulse { 0%,100% { opacity: 1; } 50% { opacity: 0.72; } }
+
+/* ─── Wetter/Zeit/Temp-Widget (oben Mitte) ─────────────────────────────────── */
+#survival-env {
+    position: fixed; top: 1.3vh; left: 50%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 10px;
+    padding: 5px 15px; border-radius: 14px;
+    background: rgba(10, 14, 18, 0.6); color: #fff;
+    font-size: 13.5px; font-weight: 600; letter-spacing: 0.4px; white-space: nowrap;
+    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.45); z-index: 20;
+}
+#survival-env .sep { width: 1px; height: 13px; background: rgba(255, 255, 255, 0.18); }
+
+/* ─── Death/Downed-Overlay ─────────────────────────────────────────────────── */
+#survival-downed {
+    position: fixed; inset: 0; display: none; flex-direction: column;
+    align-items: center; justify-content: center; gap: 10px; z-index: 40;
+    background: radial-gradient(ellipse at center, rgba(60,0,0,0.25) 0%, rgba(0,0,0,0.82) 78%);
+    text-align: center; pointer-events: none;
+}
+#survival-downed .dtitle {
+    font-size: 64px; font-weight: 800; letter-spacing: 8px; color: #d23b30;
+    text-shadow: 0 4px 22px rgba(0,0,0,0.9); animation: tfp-deadthrob 2.4s ease-in-out infinite;
+}
+#survival-downed.dead .dtitle { color: #b0b0b0; }
+#survival-downed .dsub { font-size: 22px; font-weight: 600; color: #f0d6d6; letter-spacing: 1px; }
+#survival-downed .dhint { font-size: 15px; color: #c9c9c9; letter-spacing: 1px; margin-top: 6px; }
+@keyframes tfp-deadthrob { 0%,100% { opacity: 0.86; } 50% { opacity: 1; } }
+
+/* ─── Realismus-Vignetten ──────────────────────────────────────────────────── */
+#survival-vignette-red, #survival-vignette-blue {
+    position: fixed; inset: 0; z-index: 10; pointer-events: none;
+    opacity: 0; transition: opacity 0.6s ease;
+}
+#survival-vignette-red  { background: radial-gradient(ellipse at center, rgba(120,0,0,0) 42%, rgba(150,0,0,0.55) 100%); }
+#survival-vignette-blue { background: radial-gradient(ellipse at center, rgba(0,40,120,0) 46%, rgba(40,90,200,0.45) 100%); }
+#survival-vignette-red.beat { animation: tfp-heartbeat 0.85s ease-in-out infinite; }
+@keyframes tfp-heartbeat {
+    0%, 100% { opacity: 0.45; }
+    30%      { opacity: 0.92; }
+    45%      { opacity: 0.55; }
+    65%      { opacity: 0.98; }
+    80%      { opacity: 0.5; }
+}
